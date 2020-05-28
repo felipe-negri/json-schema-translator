@@ -7,6 +7,7 @@ const TypeCast = require('./src/TypeCastProvider');
 module.exports = {
   translateObject,
   translateValue,
+  translateList,
 };
 
 /**
@@ -78,6 +79,23 @@ async function translateObject(sourceObject, targetSchema, options = {}) {
   }
 
   return newObjectResult;
+}
+
+/**
+ * Translates an object given a JSON Schema with translation specification.
+ * @param {object} sourceObjectList The list of objects to be translated.
+ * @param {object} targetSchema The JSON Schema containing translation specification.
+ * @param {object} [options={}] Translation default options to use in each property translation. 
+ * @returns
+ */
+async function translateList(sourceObjectList, targetSchema, options = {}) {
+  const objectList = [];
+
+  for (const sourceObject of sourceObjectList) {
+    const objectResult = await translateObject(sourceObject, targetSchema, options);
+    objectList.push(objectResult);
+  }
+  return objectList;
 }
 
 /**
